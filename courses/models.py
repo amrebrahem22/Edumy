@@ -27,10 +27,16 @@ Rating_CHOICES = (
 def preview_video_upload(instance, filename):
     return f'courses/{instance.title}/{instance.title}_{filename}'
 
+def lesson_video_upload(instance, filename):
+    return f'courses/lessons/{instance.title}/{instance.title}_{filename}'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
@@ -66,6 +72,28 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+
+class Chapter(models.Model):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.course.title} - {self.title}'
+
+class Lesson(models.Model):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(null=True, blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    position = models.IntegerField(default=1)
+    duration = models.CharField(max_length=10)
+    video       = models.FileField(upload_to=lesson_video_upload)
+    thumbnail = models.ImageField(upload_to=lesson_video_upload)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.chapter.title} - {self.title}'
+
 # Create Slug for Course
 def post_save_create_course(sender, instance, created, *args, **kwargs):
     if created:
@@ -83,3 +111,21 @@ def post_save_create_category(sender, instance, created, *args, **kwargs):
         instance.save()
 
 post_save.connect(post_save_create_category, sender=Category)
+
+# Create Slug for Chapter
+def post_save_create_chapter(sender, instance, created, *args, **kwargs):
+    if created:
+        if instance.slug is None and instance.title:
+            instance.slug = slugify(instance.title)
+        instance.save()
+
+post_save.connect(post_save_create_chapter, sender=Chapter)
+
+# Create Slug for Lesson
+def post_save_create_lesson(sender, instance, created, *args, **kwargs):
+    if created:
+        if instance.slug is None and instance.title:
+            instance.slug = slugify(instance.title)
+        instance.save()
+
+post_save.connect(post_save_create_lesson, sender=Lesson)
