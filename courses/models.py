@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.text import slugify
 from django.db.models.signals import post_save
+from django.urls import reverse
 
 from instructors.models import Instructor
 from comments.models import Comment
@@ -47,7 +48,7 @@ class Course(models.Model):
     author                      = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     price                       = models.DecimalField(decimal_places=2, max_digits=10)
     discount                    = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
-    duration                    = models.CharField(max_length=100)
+    duration                    = models.IntegerField(default=0, help_text="Type the number of minutes")
     full_lifetime_access        = models.BooleanField(default=True)
     assignments                 = models.BooleanField(default=True)
     Certificate_of_completion   = models.BooleanField(default=True)
@@ -71,6 +72,15 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('courses:detail', kwargs={'slug': self.slug})
+
+    def get_rating(self):
+        return [i for i in range(self.rating)]
+
+    def get_duration(self):
+        return int(self.duration * 60)
 
 
 class Chapter(models.Model):

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'courses',
     'comments',
     'tags',
+    'membership',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +64,7 @@ ROOT_URLCONF = 'edumy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFIELS_DIRS = [
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static_project')
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -135,3 +136,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+STRIBE_PUB_KEY = 'pk_test_MDwzuN5BjaLGQQWfjizGcZDT00EfRGMhjm'
+STRIPE_SECRET_KEY = 'sk_test_eMPykiD7WnJiIZU9T3ag080E006btNSqyj'
