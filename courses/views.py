@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.urls import reverse
 from functools import partial, wraps
 from django.forms import formset_factory
-from .models import Course
-from .forms import CourseForm, ChapterForm
+from .models import Course, Chapter
+from .forms import CourseForm, ChapterForm, LessonForm
 
 
 def index(request):
@@ -66,9 +66,48 @@ def course_create_chapter(request, course_id):
             for form in formset:
                 form.save()
             messages.success(request, 'Successfully created the Chapter')
-            return redirect(reverse('courses:detail', kwargs={'slug':course.slug}))
+            return redirect(reverse('courses:course_create_lesson', kwargs={'course_id':course.id}))
 
     context = {
         'forms': formset
     }
     return render(request, 'courses/course_create_chapter.html', context)
+
+
+def course_create_lesson(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    LessonFormSet = formset_factory(wraps(LessonForm)(partial(LessonForm, course=course.id)))
+    formset = LessonFormSet()
+
+    if request.method == "POST":
+        formset = LessonFormSet(request.POST, request.FILES)
+
+        l = dict(request.POST)
+        s = l.pop('chapter')
+        print('s > ', s)
+        chapters = []
+        for i in s:
+            print('i > ' ,i)
+            ind= int(s.index(i))
+            c = s[ind]
+            print('c > ', c)
+            chapter = Chapter.objects.get(id=c)
+            chapters.append(chapter)
+            print('chapte > ', chapter)
+
+        print('chapters > ', chapters)
+        if formset.is_valid():
+            for i, form in enumerate(formset):
+                # chapter = Chapter.objects.get(id=request.POST.get('chapter'))
+                print(i)
+                form.instance.chapter = chapters[i]
+                form.save()
+                print(form.instance.chapter)
+            messages.success(request, 'Successfully created the Chapter')
+            return redirect(reverse('courses:detail', kwargs={'slug':course.slug}))
+
+    context = {
+        'forms': formset,
+        'chapters': course.chapter_set.all()
+    }
+    return render(request, 'courses/create_new_lesson.html', context)
