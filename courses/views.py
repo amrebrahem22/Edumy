@@ -84,25 +84,18 @@ def course_create_lesson(request, course_id):
 
         l = dict(request.POST)
         s = l.pop('chapter')
-        print('s > ', s)
         chapters = []
         for i in s:
-            print('i > ' ,i)
             ind= int(s.index(i))
             c = s[ind]
-            print('c > ', c)
             chapter = Chapter.objects.get(id=c)
             chapters.append(chapter)
-            print('chapte > ', chapter)
 
         print('chapters > ', chapters)
         if formset.is_valid():
             for i, form in enumerate(formset):
-                # chapter = Chapter.objects.get(id=request.POST.get('chapter'))
-                print(i)
                 form.instance.chapter = chapters[i]
                 form.save()
-                print(form.instance.chapter)
             messages.success(request, 'Successfully created the Chapter')
             return redirect(reverse('courses:detail', kwargs={'slug':course.slug}))
 
