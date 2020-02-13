@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView
+from django.contrib import messages
+from django.urls import reverse
+from functools import partial, wraps
+from django.forms import formset_factory
 from .models import Course
+from .forms import CourseForm, ChapterForm
 
 
 def index(request):
@@ -10,6 +15,7 @@ class CoursesListView(ListView):
     model = Course
     template_name = 'courses/courses_list.html'
     context_object_name = 'courses'
+    paginate_by = 12
 
 class CoursesDetailView(DetailView):
     model = Course
@@ -23,3 +29,46 @@ class CoursesDetailView(DetailView):
         context['what_will_learn'] = rate.what_will_learn.split(', ')
         context['requirements'] = rate.requirements.split(', ')
         return context
+
+
+def course_create(request):
+    user = request.user.instructor_set.first()
+    form = CourseForm(user=user)
+
+    if request.method == "POST":
+        form = CourseForm(request.POST, request.FILES, user=user)
+
+        print('POST > ', request.POST)
+
+        if form.is_valid():
+            form.save()
+            print(form.instance)
+            print(form.instance.id)
+            messages.success(request, 'Successfully created the Course')
+            return redirect(reverse('courses:course_create_chapter', kwargs={'course_id': form.instance.id}))
+
+    context = {
+        'form': form
+    }
+    return render(request, 'courses/course_create.html', context)
+
+def course_create_chapter(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    ChapterFormSet = formset_factory(wraps(ChapterForm)(partial(ChapterForm, course=course)))
+    formset = ChapterFormSet()
+
+    if request.method == "POST":
+        formset = ChapterFormSet(request.POST)
+
+        print('POST > ', request.POST)
+
+        if formset.is_valid():
+            for form in formset:
+                form.save()
+            messages.success(request, 'Successfully created the Chapter')
+            return redirect(reverse('courses:detail', kwargs={'slug':course.slug}))
+
+    context = {
+        'forms': formset
+    }
+    return render(request, 'courses/course_create_chapter.html', context)

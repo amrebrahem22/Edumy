@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Inner Page Breadcrumb -->
+<section class="inner_page_breadcrumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 offset-xl-3 text-center">
+                <div class="breadcrumb_content">
+                    <h4 class="breadcrumb_title">Create a New Course</h4>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create a New Course</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our LogIn Register -->
+<section class="our-log bgc-fa">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="login_form inner_page">
+                    {{block.super}}
+                    {{ form.non_field_errors }}
+                    <form action="." method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="heading">
+                            <h3 class="text-center">Create a New Course</h3>
+                        </div>
+                        {{form.as_p}}
+                        <!-- <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{form.title}}
+                                    {{form.title.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.price}}
+                                    {{form.price.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.discount}}
+                                    {{form.discount.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.duration.label_tag}} {{form.duration}}
+                                    {{form.duration.label_tag}} {{form.duration.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.full_lifetime_access.errors}}
+                                    {{form.full_lifetime_access}} <label
+                                        for="id_full_lifetime_access">{{form.full_lifetime_access.label}}</label>
+                                </div>
+                                <div class="form-group">
+                                    {{form.assignments.errors}}
+                                    {{form.assignments}} <label
+                                        for="id_assignments">{{form.assignments.label_tag}}</label>
+                                </div>
+                                <div class="form-group">
+                                    {{form.Certificate_of_completion.errors}}
+                                    {{form.Certificate_of_completion}} <label
+                                        for="id_Certificate_of_completion">{{form.Certificate_of_completion.label}}</label>
+                                </div>
+                                <div class="form-group">
+                                    {{form.preview.label_tag}}
+                                    {{form.preview}}
+                                    {{form.preview.errors}}
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{form.thumbnail.label_tag}}
+                                    {{form.thumbnail}}
+                                    {{form.thumbnail.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.overview}}
+                                    {{form.overview.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.description}}
+                                    {{form.description.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.what_will_learn}}
+                                    {{form.what_will_learn.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.requirements}}
+                                    {{form.requirements.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.Skill_level}}
+                                    {{form.Skill_level.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.language}}
+                                    {{form.language.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.category}}
+                                    {{form.category.errors}}
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <button type="submit" class="btn btn-log btn-block btn-thm2">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

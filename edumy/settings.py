@@ -140,3 +140,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STRIBE_PUB_KEY = 'pk_test_MDwzuN5BjaLGQQWfjizGcZDT00EfRGMhjm'
 STRIPE_SECRET_KEY = 'sk_test_eMPykiD7WnJiIZU9T3ag080E006btNSqyj'
+
+
+# special field names
+TOTAL_FORM_COUNT = 'TOTAL_FORMS'
+INITIAL_FORM_COUNT = 'INITIAL_FORMS'
+MIN_NUM_FORM_COUNT = 'MIN_NUM_FORMS'
+MAX_NUM_FORM_COUNT = 'MAX_NUM_FORMS'
+ORDERING_FIELD_NAME = 'ORDER'
+DELETION_FIELD_NAME = 'DELETE'
+
+# default minimum number of forms in a formset
+DEFAULT_MIN_NUM = 0
+
+# default maximum number of forms in a formset, to prevent memory exhaustion
+DEFAULT_MAX_NUM = 1000

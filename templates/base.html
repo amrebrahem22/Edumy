@@ -16,7 +16,7 @@
 	<!-- Responsive stylesheet -->
 	<link rel="stylesheet" href="{% static 'css/responsive.css' %}">
 	<!-- Title -->
-	<title>Edumy - LMS Online Education Courses & School</title>
+	<title>{% block title %} Edumy - LMS Online Education Courses & School {% endblock %}</title>
 	<!-- Favicon -->
 	<link href="{% static 'images/favicon.ico' %}" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
 	<link href="{% static 'images/favicon.ico' %}" sizes="128x128" rel="shortcut icon" />
@@ -52,6 +52,7 @@
 		{% include 'snippets/footer.html' %}
 	</div>
 	{% include 'snippets/scripts.html' %}
+	{% block extraScript %} {% endblock %}
 </body>
 
 <!-- Mirrored from grandetest.com/theme/edumy-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 10 Feb 2020 17:30:06 GMT -->

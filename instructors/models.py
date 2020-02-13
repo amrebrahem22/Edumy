@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
+from django.urls import reverse
 
 User = settings.AUTH_USER_MODEL
 
@@ -21,7 +22,7 @@ class Instructor(models.Model):
     twitter     = models.CharField(max_length=50, blank=True, null=True)
     instagram   = models.CharField(max_length=50, blank=True, null=True)
     linkedin    = models.CharField(max_length=50, blank=True, null=True)
-    Experience  = models.TextField(help_text="Separate them with Comma and Space.", blank=True, null=True)
+    experience  = models.TextField(help_text="Separate them with Comma and Space.", blank=True, null=True)
     timestamp   = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
     active      = models.BooleanField(default=True)
@@ -29,10 +30,13 @@ class Instructor(models.Model):
     def __str__(self):
         return self.username
 
-def post_save_instructor_create(sender, instance, created, *args, **kwargs):
-    if created:
-        qs, create = Instructor.objects.get_or_create(user=instance)
-        if create:
-            qs.save()
+    def get_absolute_url(self):
+        return reverse('instructor', kwargs={'pk': self.pk})
 
-post_save.connect(post_save_instructor_create, sender=User)
+# def post_save_instructor_create(sender, instance, created, *args, **kwargs):
+#     if created:
+#         qs, create = Instructor.objects.get_or_create(user=instance)
+#         if create:
+#             qs.save()
+
+# post_save.connect(post_save_instructor_create, sender=User)
