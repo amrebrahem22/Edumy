@@ -12,6 +12,7 @@ urlpatterns = [
     path('instructors/<pk>/', InstructorDetailView.as_view(), name="instructor"),
     path('courses/', include('courses.urls')),
     path('auth/', include('instructors.urls')),
+    path('cart/', include('cart.urls')),
 ]
 
 if settings.DEBUG:

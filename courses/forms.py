@@ -19,6 +19,8 @@ class CourseForm(forms.ModelForm):
             if field not in li:
                 self.fields[field].widget.attrs['class'] = 'form-control'
                 self.fields[field].widget.attrs['placeholder'] = field.title()
+                if field == 'thumbnail' or field == 'preview':
+                    self.fields[field].widget.attrs['style'] = 'padding: 10px'
 
     def save(self, commit=True):
         inst = super(CourseForm, self).save(commit=False)

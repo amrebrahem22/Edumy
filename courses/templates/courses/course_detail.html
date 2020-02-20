@@ -26,16 +26,16 @@
 								<h3 class="cs_title color-white">{{course.title}}</h3>
 								<ul class="cs_review_seller">
 									{% if course.best_seller %}
-									<li class="list-inline-item"><a class="color-white" href="#"><span>Best Seller</span></a></li>
+									<li class="list-inline-item best"><a class="color-white" href="#"><span>Best Seller</span></a></li>
 									{% endif %}
 									{% for _ in course.get_rating %}
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+									<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
 									{% endfor %}
 									<li class="list-inline-item"><a class="color-white" href="#">4.5 (11,382 Ratings)</a></li>
 								</ul>
 								<ul class="cs_review_enroll">
-									<li class="list-inline-item"><a class="color-white" href="#"><span class="flaticon-profile"></span> 57,869 students enrolled</a></li>
-									<li class="list-inline-item"><a class="color-white" href="#"><span class="flaticon-comment"></span> 25 Review</a></li>
+									<li class="list-inline-item"><a class="color-white" href="#"><span class="flaticon-profile"></span> {{duration}} 57,869 students enrolled</a></li>
+									<li class="list-inline-item"><a class="color-white" href="#"><span class="flaticon-comment"></span> {{course.comments_count}} Review</a></li>
 								</ul>
 							</div>
 						</div>
@@ -221,10 +221,13 @@
 											<div class="cs_row_six csv2">
 												<div class="sfeedbacks">
 													<div class="mbp_pagination_comments">
+														
+														{% for comment in comments %}
+														{% if comment.is_parent %}
 														<div class="mbp_first media csv1">
-															<img src="images/resource/review1.png" class="mr-3" alt="review1.png">
+															<img src="{{comment.user.instructor_set.first.avatar.url}}" class="mr-3" alt="review1.png">
 															<div class="media-body">
-														    	<h4 class="sub_title mt-0">Warren Bethell
+														    	<h4 class="sub_title mt-0">{{comment.user.instructor_set.first.username}}
 																	<span class="sspd_review float-right">
 																		<ul>
 																			<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
@@ -236,58 +239,36 @@
 																		</ul>
 																	</span>										    		
 														    	</h4>
-														    	<a class="sspd_postdate fz14" href="#">6 months ago</a>
-														    	<p class="fz15 mt20">This is the second Photoshop course I have completed with Cristian. Worth every penny and recommend it highly. To get the most out of this course, its best to to take the Beginner to Advanced course first.</p>
-														    	<p class="fz15 mt25 mb25">The sound and video quality is of a good standard. Thank you Cristian.</p> <div class="ssp_reply float-right"><span class="flaticon-consulting-message"></span><span class="pl10">Reply</span></div>
-														    	<div class="sspd_review_liked"><a href="#"><i class="flaticon-like-1"></i> <span class="text-thm6 pl5 pr5 fz15">15</span> Thank Waren</a></div>
-																<div class="custom_hr style2"></div>
-															    <div class="mbp_sub media csv1">
-															    	<a href="#"><img src="images/resource/review1.png" class="mr-3" alt="review1.png"></a>
-															        <div class="media-body">
-															        	<h4 class="sub_title mt-0">Anton Hilton
-																			<span class="sspd_review float-right">
-																				<ul>
-																					<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																					<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																					<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																					<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																					<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																					<li class="list-inline-item"></li>
-																				</ul>
-																			</span>	
-															        	</h4>
-																    	<a class="sspd_postdate fz14" href="#">6 months ago</a>
-																    	<p class="fz15 mt20 mb50">This is the second Photoshop course I have completed with Cristian. Worth every penny and recommend it highly. To get the most out of this course, its best to to take the</p>
-																    	<div class="ssp_reply float-right"><span class="flaticon-consulting-message"></span><span class="pl10">Reply</span></div>
-														    			<div class="sspd_review_liked">
-														    				<a href="#"><i class="flaticon-like-1"></i><span class="text-thm6 pl5 pr5 fz15">15</span> Thank Waren</a>
-														    			</div>
-															    	</div>
-															    </div>
+														    	<a class="sspd_postdate fz14" href="#">{{comment.timestamp|timesince}}</a>
+														    	<p class="fz15 mt20">{{comment.body}}</p> 
+																<div class="ssp_reply float-right"><span class="flaticon-consulting-message"></span><span class="pl10">Reply</span></div>
+																
+																{% for reply in comment.children %}
+														    	<div class="sspd_review_liked">
+																	<a href="#"><i class="flaticon-like-1"></i> 
+																		<span class="text-thm6 pl5 pr5 fz15">15</span> 
+																		{{reply.body}}
+																	</a>
+																</div>
+																{% endfor %}
+																{% if request.user.is_Authenticated %}
+																<form class="comments_form" method='POST' action='.'>
+																	{% csrf_token %}
+																	<input type="hidden" name="object_id" value="{{ comment.id }}">
+																	<div class="form-group">
+																		<label for="exampleFormControlTextarea1">Reply Content</label>
+																		<textarea class="form-control" name='body' id="exampleFormControlTextarea1" rows="6"></textarea>
+																	</div>
+																	<button type="submit" class="btn btn-thm">Reply <span class="flaticon-right-arrow-1"></span></button>
+																</form>
+																{% else %}
+																	<li class="list-inline-item pr15"><p>Sign in to Comment <a href="{% url 'auth:login' %}">Login</a> or <a href="{% url 'auth:signup' %}">Register</a></p></li>
+																{% endif %}
 															</div>
 														</div>
-														<div class="custom_hr"></div>
-														<div class="mbp_second media csv1">
-															<img src="images/resource/review1.png" class="align-self-start mr-3" alt="review1.png">
-															<div class="media-body">
-														    	<h4 class="sub_title mt-0">Warren Bethell
-																	<span class="sspd_review float-right">
-																		<ul>
-																			<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																			<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																			<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																			<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																			<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-																			<li class="list-inline-item"></li>
-																		</ul>
-																	</span>										    		
-														    	</h4>
-														    	<a class="sspd_postdate fz14" href="#">6 months ago</a>
-														    	<p class="fz15 mt20">This is the second Photoshop course I have completed with Cristian. Worth every penny and recommend it highly. To get the most out of this course, its best to to take the Beginner to Advanced course first.</p>
-														    	<p class="fz15 mt25 mb25">The sound and video quality is of a good standard. Thank you Cristian.</p> <div class="ssp_reply float-right"><span class="flaticon-consulting-message"></span><span class="pl10">Reply</span></div>
-														    	<div class="sspd_review_liked"><a href="#"><i class="flaticon-like-1"></i> <span class="text-thm6 pl5 pr5 fz15">15</span> Thank Waren</a></div>
-															</div>
-														</div>
+														<!-- <div class="custom_hr"></div> -->
+														{% endif %}
+														{% endfor %}
 														<div class="text-center mt50">
 															<div class="custom_hr"></div>
 															<button type="button" class="more-review-btn btn">See more reviews</button>
@@ -299,6 +280,7 @@
 												<div class="sfeedbacks">
 													<div class="mbp_comment_form style2 pb0">
 														<h4>Add Reviews & Rate</h4>
+														{% if request.user.is_authenticated %}
 														<ul>
 															<li class="list-inline-item pr15"><p>What is it like to Course?</p></li>
 															<li class="list-inline-item">
@@ -314,17 +296,17 @@
 																</span>
 															</li>
 														</ul>
-														<form class="comments_form">
-															<div class="form-group">
-														    	<label for="exampleInputName1">Review Title</label>
-														    	<input type="text" class="form-control" id="exampleInputName1" aria-describedby="textHelp">
-															</div>
+														<form class="comments_form" method='POST' action='.'>
+															{% csrf_token %}
 															<div class="form-group">
 															    <label for="exampleFormControlTextarea1">Review Content</label>
-															    <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+															    <textarea class="form-control" name='body' id="exampleFormControlTextarea1" rows="6"></textarea>
 															</div>
 															<button type="submit" class="btn btn-thm">Submit Review <span class="flaticon-right-arrow-1"></span></button>
 														</form>
+														{% else %}
+															<li class="list-inline-item pr15"><p>Sign in to Comment <a href="{% url 'auth:login' %}">Login</a> or <a href="{% url 'auth:signup' %}">Register</a></p></li>
+														{% endif %}
 													</div>
 												</div>
 											</div>
@@ -338,26 +320,27 @@
 						<div class="col-lg-12">
 							<h3 class="r_course_title">Related Courses</h3>
 						</div>
+						{% for course in related_courses %}
 						<div class="col-lg-6 col-xl-4">
 							<div class="top_courses">
 								<div class="thumb">
-									<img class="img-whp" src="images/courses/t1.jpg" alt="t1.jpg">
+									<img class="img-whp" src="{{course.thumbnail.url}}" alt="t1.jpg">
 									<div class="overlay">
+										{% if course.best_Seller %}
 										<div class="tag">Best Seller</div>
+										{% endif %}
 										<div class="icon"><span class="flaticon-like"></span></div>
-										<a class="tc_preview_course" href="#">Preview Course</a>
+										<a class="tc_preview_course" href="{{course.get_absolute_url}}">Preview Course</a>
 									</div>
 								</div>
 								<div class="details">
 									<div class="tc_content">
-										<p>Ali TUFAN</p>
-										<h5>Introduction Web Design with HTML</h5>
+										<p>{{course.author}}</p>
+										<h5>{{course.title}}</h5>
 										<ul class="tc_review">
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+											{% for _ in course.get_rating %}
+										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+									{% endfor %}
 											<li class="list-inline-item"><a href="#">(6)</a></li>
 										</ul>
 									</div>
@@ -368,87 +351,18 @@
 											<li class="list-inline-item"><a href="#"><i class="flaticon-comment"></i></a></li>
 											<li class="list-inline-item"><a href="#">25</a></li>
 										</ul>
-										<div class="tc_price float-right">$69.95</div>
+										<div class="tc_price float-right">{% if course.discount %} ${{ course.discount }} <del>${{course.price}}</del> {% else %} ${{course.price}} {% endif %} </div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-6 col-xl-4">
-							<div class="top_courses">
-								<div class="thumb">
-									<img class="img-whp" src="images/courses/t2.jpg" alt="t2.jpg">
-									<div class="overlay">
-										<div class="tag">Top Seller</div>
-										<div class="icon"><span class="flaticon-like"></span></div>
-										<a class="tc_preview_course" href="#">Preview Course</a>
-									</div>
-								</div>
-								<div class="details">
-									<div class="tc_content">
-										<p>Ali TUFAN</p>
-										<h5>Designing a Responsive Mobile Website with Muse</h5>
-										<ul class="tc_review">
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#">(6)</a></li>
-										</ul>
-									</div>
-									<div class="tc_footer">
-										<ul class="tc_meta float-left">
-											<li class="list-inline-item"><a href="#"><i class="flaticon-profile"></i></a></li>
-											<li class="list-inline-item"><a href="#">1548</a></li>
-											<li class="list-inline-item"><a href="#"><i class="flaticon-comment"></i></a></li>
-											<li class="list-inline-item"><a href="#">25</a></li>
-										</ul>
-										<div class="tc_price float-right">$69.95</div>
-									</div>
-								</div>
-							</div>
+						{% endfor %}
 						</div>
-						<div class="col-lg-6 col-xl-4">
-							<div class="top_courses">
-								<div class="thumb">
-									<img class="img-whp" src="images/courses/t3.jpg" alt="t3.jpg">
-									<div class="overlay">
-										<div class="tag">Top Seller</div>
-										<div class="icon"><span class="flaticon-like"></span></div>
-										<a class="tc_preview_course" href="#">Preview Course</a>
-									</div>
-								</div>
-								<div class="details">
-									<div class="tc_content">
-										<p>Ali TUFAN</p>
-										<h5>Adobe XD: Prototyping Tips and Tricks</h5>
-										<ul class="tc_review">
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-											<li class="list-inline-item"><a href="#">(6)</a></li>
-										</ul>
-									</div>
-									<div class="tc_footer">
-										<ul class="tc_meta float-left">
-											<li class="list-inline-item"><a href="#"><i class="flaticon-profile"></i></a></li>
-											<li class="list-inline-item"><a href="#">1548</a></li>
-											<li class="list-inline-item"><a href="#"><i class="flaticon-comment"></i></a></li>
-											<li class="list-inline-item"><a href="#">25</a></li>
-										</ul>
-										<div class="tc_price float-right">$69.95</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 				<div class="col-lg-4 col-xl-3">
 					<div class="instructor_pricing_widget csv2">
-						<div class="price"><span>Price</span> $49.00 <small>$69.00</small></div>
-						<a href="#" class="cart_btnss">Add To Cart</a>
+						<div class="price"><span>Price</span> {% if course.discount %} ${{ course.discount }}  <small>${{course.price}}</small> {% else %} ${{course.price}} {% endif %}</div>
+						<a href="{% url 'cart:add_to_cart' slug=course.slug %}" class="cart_btnss">Add To Cart</a>
 						<a href="#" class="cart_btnss_white">Buy Now</a>
 						<h5 class="subtitle text-left">Includes</h5>
 						<ul class="price_quere_list text-left">

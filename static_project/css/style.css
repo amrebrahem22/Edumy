@@ -1,3 +1,13 @@
+/*******
+Project/Template Name:  Edumy - LMS Online Education Course & School HTML Template
+Template Url:  
+Author: CreativeLayers
+Author Url: https://themeforest.net/user/creativelayers/portfolio
+Version: 1.0
+Description: Edumy - LMS Online Education Course & School HTML Template
+Tag:    academy, college, coursera, courses, education, elearning, kindergarten, lms, lynda, online course, online education, school, training, udemy, university
+
+********/
 /* CSS Document */
 @import url(jquery-ui.min.css);
 @import url(font-awesome.min.css);
@@ -15,6 +25,99 @@
 @import url(timecounter.css);
 @import url(https://fonts.googleapis.com/css?family=Nunito:400,500,600,700|Open+Sans);
 /* Table of contents */
+
+
+/*== Typography ==*/
+/* Search Overlay */
+/*== Header Top Style ==*/
+/* Header Top Search Field css home2 */
+/*== Menu Style For Home V1 & V2 ==*/
+/*== Menu Style For Home V2 ==*/
+/*== Menu Style For Home V3 ==*/
+/*== Menu Style For Home V4 ==*/
+/*== Menu Style For Home V5 ==*/
+/*== Menu Style For Home V6 ==*/
+/*== Menu Style For Home V7 ==*/
+/*== Mobile Menu Css ==*/
+/*== Home Css ==*/
+/* ==== Home 2 Main Sliders === */
+/*== Home Icon Box ==*/
+/*== Home Five Overlay Slider ==*/
+/*== School Category Courses ==*/
+/*== School Category Top Courses ==*/
+/*== Popular Job Categories => Icon Hover Image Box ==*/
+/*== Funfact Counter ==*/
+/*== Footer Social Widget ==*/
+/*== 1st Layout Footer ==*/
+/*== Footer Widget ==*/
+/*== Inner Pages Breadcrumb ==*/
+/*== About Page About Content ==*/
+/*== About home3 ==*/
+/*== Testimonials Grid ==*/
+/*== Blog Post Home V1 ==*/
+/*== Team Slider Code ==*/
+/*== Pricing Table Four ==*/
+/*== Our Partners ==*/
+/*== Error/404 Page ==*/
+/*== Invoice Page ==*/
+/*== LogIn Register Page ==*/
+/*== SignUP Form ==*/
+/* Create a custom checkbox */
+/*== Search Widget Faq Page ==*/
+/*== Question Widget Faq Page ==*/
+/*== Tab Widget UI Page ==*/
+/*== Table Widget UI Page ==*/
+/*== Message Box Widget UI Page ==*/
+/*== Form Input Widget UI Page ==*/
+/*== Form Textarea Widget UI Page ==*/
+/*== Form Tooltip Widget UI Page ==*/
+/*== Select Search Box Widget UI Page ==*/
+/*== Radiobox, Checkbox, Switch Widget UI Page ==*/
+/*== CheckBox Widget UI Page ==*/
+/*== SwithcBox Widget UI Page ==*/
+/*== Select Box Widget UI Page ==*/
+/*== MultiSelect CheckBox Widget UI Page ==*/
+/*== Blog Post Main Page ==*/
+/*== Blog Grid Post ==*/
+/*== Search Widget Blog Page ==*/
+/*== Category Widget Blog Page ==*/
+/*== Recent Post Widget Blog Page ==*/
+/*== Tag Widget Blog Page ==*/
+/*== BlokQuote Blog Sinlge Page ==*/
+/*== Next Prev Pagination Blog Sinlge Page ==*/
+/*== Commenting Blog Sinlge Page ==*/
+/*== Commenting Form Blog Sinlge Page ==*/
+/*== Dashbord details Page ==*/
+/*== Header User Notification & User ID ==*/
+/*== Header User Setting ID ==*/
+/*== Candidate Job Review Page Table ==*/
+/*== My Resume Page ==*/
+/*== Message Page ==*/
+/*== DashBoard Pages ==*/
+/*== sidebar about widget ==*/
+/*== Pricing SLider ==*/
+/*== Profile Avatar ==*/
+/*== UI Page Elements ==*/
+/*== Alpha v2 Page ==*/
+/*== Testimonials Slider ==*/
+/*== Testimonials Home V3 ==*/
+/*== Contact Page ==*/
+/*== Maximage_slider ==*/
+/*== Color Area ==*/
+/*== Button Area ==*/
+/*== Fonts Size, Font Weights, Height, Display & Position ==*/
+/*== Custome Margin Padding ==*/
+/*== BackGround Images ==*/
+/*== BackGround Color White Overlay ==*/
+/*== Parallax Css ==*/
+/*== Divider Css ==*/
+/*== Chart Js Css ==*/
+/*== Tags Bar Css ==*/
+/*== arrow fontawesome icon to the right */
+/*== Shop Page Style ==*/
+/*== Shop Order Page Style ==*/
+/*== Shop Chaeckout Page Style ==*/
+/*== Shop Single Page Style ==*/
 
 /*== Typography ==*/
 html {
@@ -2886,10 +2989,10 @@ header.header-nav.menu_style_home_seven .ace-responsive-menu > li.last{
   color: rgb(208, 210, 60);
   line-height: 1.2;
 }
-.cs_row_one .cs_review_seller li:first-child{
+.cs_row_one .cs_review_seller li.best{
   margin-right: 15px;
 }
-.cs_row_one .cs_review_seller li:first-child a{
+.cs_row_one .cs_review_seller li.best a{
   border-radius: 5px;
   background-color: rgb(255, 16, 83);
   color: #ffffff;
@@ -3124,8 +3227,10 @@ header.header-nav.menu_style_home_seven .ace-responsive-menu > li.last{
   background-color: rgb(237, 239, 247);
   border-radius: 20px;
   height: 40px;
-  text-align: center;
-  max-width: 200px;
+  text-align: left;
+  padding: 2px 20px;
+  margin: 15px 19px;
+  max-width: 700px;
 }
 .cs_row_six .sfeedbacks .sspd_review_liked a{
   font-size: 14px;
@@ -8741,7 +8846,7 @@ ul.mc_parent_list ul.mc_child_list:hover .pricing_btn{
 .testimonial_slider_home3 .testimonial_content:before {
   top: -50px;
   overflow: hidden;
-  content: '“';
+  content: 'Ã¢â‚¬Å“';
   color: #0a0a0a;
   font-weight: 700;
   font-size: 170px;
@@ -11696,6 +11801,7 @@ body.translated{
 }
 .custom_hr{
   position: relative;
+  display: none;
 }
 .custom_hr:before {
   background-color: #eeeeee;
@@ -11899,4 +12005,3 @@ textarea.form-control{
   color: #ffffff;
   font-size: 50px;
 }
-

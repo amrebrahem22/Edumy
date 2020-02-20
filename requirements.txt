@@ -1,0 +1,19 @@
+-i https://pypi.org/simple
+asgiref==3.2.3
+certifi==2019.11.28
+chardet==3.0.4
+decorator==4.4.1
+django==3.0.3
+idna==2.9
+imageio-ffmpeg==0.4.0
+imageio==2.8.0
+moviepy==1.0.1
+numpy==1.18.1
+pillow==7.0.0
+proglog==0.1.9
+pytz==2019.3
+requests==2.23.0 ; python_version >= '3.0'
+sqlparse==0.3.0
+stripe==2.42.0
+tqdm==4.43.0
+urllib3==1.25.8

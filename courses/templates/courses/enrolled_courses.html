@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- Inner Page Breadcrumb -->
+<section class="inner_page_breadcrumb">
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-6 offset-xl-3 text-center">
+				<div class="breadcrumb_content">
+					<h4 class="breadcrumb_title">My Courses</h4>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="/">Home</a></li>
+						<li class="breadcrumb-item active" aria-current="page">my Courses</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Courses List 2 -->
+<section class="courses-list2 pb40">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="row courses_list_heading style2">
+					<div class="col-xl-4 p0">
+						<div class="instructor_search_result style2">
+							<p class="mt10 fz15"><span class="color-dark pr10">{{courses.count}} </span> results</p>
+						</div>
+					</div>
+					<div class="col-xl-8 p0">
+						<div class="candidate_revew_select style2 text-right">
+							<ul class="mb0">
+								<li class="list-inline-item">
+									<select class="selectpicker show-tick">
+										<option>Newly published</option>
+										<option>Recent</option>
+										<option>Old Review</option>
+									</select>
+								</li>
+								<li class="list-inline-item">
+									<div class="candidate_revew_search_box course fn-520">
+										<form class="form-inline my-2 my-lg-0">
+											<input class="form-control mr-sm-2" type="search"
+												placeholder="Search our instructors" aria-label="Search">
+											<button class="btn my-2 my-sm-0" type="submit"><span
+													class="flaticon-magnifying-glass"></span></button>
+										</form>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="row courses_container style2">
+					{% for course in page_obj %}
+					<div class="col-lg-12 p0">
+						<div class="courses_list_content">
+							<div class="top_courses list">
+								<div class="thumb">
+									<img class="img-whp" src="{{course.thumbnail.url}}" alt="t1.jpg">
+									<div class="overlay">
+										<div class="icon"><span class="flaticon-like"></span></div>
+										<a class="tc_preview_course" href="{{course.get_absolute_url}}">Preview
+											Course</a>
+									</div>
+								</div>
+								<div class="details">
+									<div class="tc_content">
+										<p>{{course.author}}</p>
+										<a href="{{course.get_absolute_url}}">
+											<h5>{{course.title}} {% if course.best_seller %} <span class="tag">Best
+													Seller</span> {% endif %}</h5>
+										</a>
+										<p>{{course.overview}}</p>
+									</div>
+									<div class="tc_footer">
+										<ul class="tc_meta float-left fn-414">
+											<li class="list-inline-item"><a href="#"><i
+														class="flaticon-profile"></i></a></li>
+											<li class="list-inline-item"><a href="#">1548</a></li>
+											<li class="list-inline-item"><a href="#"><i
+														class="flaticon-comment"></i></a></li>
+											<li class="list-inline-item"><a href="#">{{course.comments_count}}</a></li>
+										</ul>
+										<div class="tc_price float-right fn-414">${{course.get_price}}</div>
+										<ul class="tc_review float-right fn-414">
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+											<li class="list-inline-item"><a href="#">(5)</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				<div class="row">
+					<div class="col-lg-12 mt50">
+						<div class="mbp_pagination">
+							<ul class="page_navigation">
+								{% if page_obj.has_previous %}
+								<li class="page-item">
+									<a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
+										aria-disabled="true"> <span class="flaticon-left-arrow"></span> Prev</a>
+								</li>
+								{% endif %}
+								<li class="page-item active" aria-current="page">
+									<a class="page-link" href="?page={{ page_obj.number }}"
+										style="color: #fff;">{{ page_obj.number }} <span
+											class="sr-only">(current)</span></a>
+								</li>
+								{% if page_obj.has_next %}
+								<li class="page-item">
+									<a class="page-link" href="?page={{ page_obj.next_page_number }}">Next <span
+											class="flaticon-right-arrow-1"></span></a>
+								</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

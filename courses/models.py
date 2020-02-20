@@ -8,6 +8,8 @@ from django.urls import reverse
 from instructors.models import Instructor
 from comments.models import Comment
 from tags.models import Tag
+from membership.models import Membership
+from django.contrib.contenttypes.models import ContentType
 
 SKILL_LEVEL = [
     ('all', 'All level'),
@@ -65,7 +67,7 @@ class Course(models.Model):
     tags                        = GenericRelation(Tag)
     comments                    = GenericRelation(Comment)
     enrolled                    = models.ManyToManyField(settings.AUTH_USER_MODEL)
-    # allowed memberships (manytomanyfield with Membership)
+    allowed_memberships         = models.ManyToManyField(Membership, default="Free")
     category                    = models.ManyToManyField(Category)
     timestamp                   = models.DateTimeField(auto_now_add=True)
     updated                     = models.DateTimeField(auto_now=True)
@@ -81,6 +83,19 @@ class Course(models.Model):
 
     def get_duration(self):
         return int(self.duration * 60)
+
+    @property
+    def get_price(self):
+        if self.discount:
+            return self.discount
+        return self.price
+    
+    @property
+    def comments_count(self):
+        course_c_type = ContentType.objects.get_for_model(Course)
+        comments_qs = Comment.objects.filter(content_type=course_c_type, object_id=self.id)
+        return comments_qs.count()
+
 
 
 class Chapter(models.Model):
@@ -103,6 +118,16 @@ class Lesson(models.Model):
 
     def __str__(self):
         return f'{self.chapter.title} - {self.title}'
+
+
+class EnrolledCourse(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    courses = models.ManyToManyField(Course)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.instructor_set.first().username
+
 
 # Create Slug for Course
 def post_save_create_course(sender, instance, created, *args, **kwargs):

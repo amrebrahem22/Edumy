@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'comments',
     'tags',
     'membership',
+    'cart',
 ]
 
 MIDDLEWARE = [
