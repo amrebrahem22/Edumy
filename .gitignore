@@ -2,3 +2,4 @@ static
 Pipfile
 Pipfile.lock
 migrations
+media
