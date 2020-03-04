@@ -8,16 +8,95 @@ from django.forms import formset_factory
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required
 from moviepy.editor import *
+from django.http import JsonResponse
 
-from .models import Course, Chapter, Category, EnrolledCourse
+from .models import Course, Chapter, Category, EnrolledCourse, WishList
 from .forms import CourseForm, ChapterForm, LessonForm
 
 from comments.forms import CommentForm
 from comments.models import Comment
+from tags.models import Tag
+from django.db.models import Q
+from blog.models import Post
+from events.models import Event
+from instructors.models import Instructor
 
 
 def index(request):
-    return render(request, 'index.html')
+    cats = Category.objects.all()[:8]
+    top_cats = Category.objects.all()[:4]
+    events = Event.objects.all()[:3]
+    blog = Post.objects.all()[:4]
+
+    context = {
+        'categories': cats,
+        'top_cats': top_cats,
+        'events': events,
+        'blog': blog
+    }
+    return render(request, 'index.html', context)
+
+
+def about(request):
+    instructors = Instructor.objects.all()[:8]
+    return render(request, 'about.html', {'instructors': instructors})
+
+def search_view(request):
+    if request.method == 'GET':
+        q = request.GET.get('q')
+        search_post = request.GET.get('search_post')
+        price = request.GET.get('price')
+        search_instructor = request.GET.get('search_instructor')
+        skill_level = request.GET.get('skill_level')
+        queryset = Course.objects.all()
+        cats = Category.objects.all()[:4]
+        instructors = Instructor.objects.all()[:10]
+        beginner = Course.objects.filter(Skill_level='beginner')
+        intermediate = Course.objects.filter(Skill_level='intermediate')
+        advanced = Course.objects.filter(Skill_level='advanced')
+        all_levels = Course.objects.filter(Skill_level='all')
+        if q:
+            queryset = Course.objects.filter(
+                Q(title__icontains=q)|
+                Q(overview__icontains=q)|
+                Q(author__username__icontains=q)
+            )
+        
+        elif skill_level:
+            queryset = Course.objects.filter(Skill_level=skill_level)
+
+        elif price == "Free":
+            queryset = Course.objects.filter(allowed_memberships__membership_type="free")
+        
+        elif price == "Paid":
+            queryset = Course.objects.exclude(allowed_memberships__membership_type="free")
+
+        elif search_instructor:
+            queryset = Course.objects.filter(
+                Q(author__username__icontains=search_instructor)
+            )
+            
+
+        elif search_post:
+            queryset = Post.objects.filter(
+                Q(title__icontains=search_post)|
+                Q(description__icontains=search_post)|
+                Q(content__icontains=search_post)|
+                Q(author__username__icontains=search_post)
+            )
+            return render(request, 'blog/blog.html', {'posts': queryset})
+
+        context = {
+            'courses': queryset,
+            'cats': cats or None,
+            'instructors': instructors or None,
+            'beginner': beginner,
+            'intermediate': intermediate,
+            'advanced': advanced, 
+            'all': all_levels
+        }
+
+    return render(request, 'courses/courses_list.html', context)
 
 
 @login_required
@@ -34,11 +113,89 @@ def my_courses(request):
 
     return render(request, 'courses/enrolled_courses.html', context)
 
+@login_required
+def wish_list(request):
+    qs = get_object_or_404(WishList, user=request.user)
+    cats = Category.objects.all()[:4]
+    instructors = Instructor.objects.all()[:10]
+    beginner = Course.objects.filter(Skill_level='beginner')
+    intermediate = Course.objects.filter(Skill_level='intermediate')
+    advanced = Course.objects.filter(Skill_level='advanced')
+    all_levels = Course.objects.filter(Skill_level='all')
+    paginator = Paginator(qs.courses.all(), 5) # Show 5 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'page_obj': page_obj,
+        'courses': qs.courses.all(),
+        'title': 'Wish List',
+        'cats': cats or None,
+        'instructors': instructors or None,
+        'beginner': beginner,
+        'intermediate': intermediate,
+        'advanced': advanced, 
+        'all': all_levels
+    }
+
+    return render(request, 'courses/courses_list.html', context)
+
+@login_required
+def add_to_wishlist(request, slug):
+    course = get_object_or_404(Course, slug=slug)
+    qs = WishList.objects.filter(user=request.user)
+    obj = None
+    val = {
+        'removed': False,
+        'created': False,
+    }
+    if qs.exists():
+        obj = qs.first()
+    else:
+        qs = WishList.objects.create(user=request.user)
+        if qs:
+            obj = qs
+    
+    if course in request.user.wishlist.courses.all():
+        obj.courses.remove(course)
+        val['removed'] = True
+    else:
+        obj.courses.add(course)
+        val['created'] = True
+    obj.save()
+    return JsonResponse(val)
+
+def category(request, slug):
+    qs = get_object_or_404(Category, slug=slug)
+    paginator = Paginator(qs.course_set.all(), 12) # Show 5 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'courses': page_obj,
+        'name': qs.name,
+        'count': qs.course_set.all().count()
+    }
+    return render(request, 'courses/category.html', context)
+
 class CoursesListView(ListView):
     model = Course
     template_name = 'courses/courses_list.html'
     context_object_name = 'courses'
     paginate_by = 12
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(CoursesListView, self).get_context_data(**kwargs)
+        context['cats'] = Category.objects.all()[:4]
+        context['instructors'] = Instructor.objects.all()[:10]
+        context['beginner'] = Course.objects.filter(Skill_level='beginner')
+        context['intermediate'] = Course.objects.filter(Skill_level='intermediate')
+        context['advanced'] = Course.objects.filter(Skill_level='advanced')
+        context['all'] = Course.objects.filter(Skill_level='all')
+        return context
+    
 
 class CoursesDetailView(DetailView):
     model = Course
@@ -49,6 +206,8 @@ class CoursesDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
+        obj.views += 1
+        obj.save()
 
         ct = obj.category.all()
         qs = Category.objects.filter(name__in=[m.name for m in ct])
@@ -58,13 +217,10 @@ class CoursesDetailView(DetailView):
         course_c_type = ContentType.objects.get_for_model(Course)
         comments_qs = Comment.objects.filter(content_type=course_c_type, object_id=obj.id).order_by('-timestamp')
         context['comments'] = comments_qs
-        clip = VideoFileClip(obj.preview.path)
-        secs = (clip.duration / 60)
-        m, s=divmod(clip.duration, 60)
-        h, m=divmod(m, 60)
-        duration = "{0}:{1}:{2}".format(h, int(m), int(s))
-        context['duration'] = duration
 
+        tags_qs = Tag.objects.filter(content_type=course_c_type, object_id=obj.id)
+        context['tags'] = tags_qs
+        
         context['what_will_learn'] = obj.what_will_learn.split(', ')
         context['requirements'] = obj.requirements.split(', ')
         context['related_courses'] = related_courses
@@ -93,14 +249,15 @@ def course_create(request):
     form = CourseForm(user=user)
 
     if request.method == "POST":
+        tags = request.POST.get('tags').split(', ')
+        course_c_type = ContentType.objects.get_for_model(Course)
         form = CourseForm(request.POST, request.FILES, user=user)
-
-        print('POST > ', request.POST)
 
         if form.is_valid():
             form.save()
-            print(form.instance)
-            print(form.instance.id)
+            for tag in tags:
+                qs = Tag.objects.create(content_type=course_c_type, name=tag, object_id=form.instance.id)
+                qs.save()
             messages.success(request, 'Successfully created the Course')
             return redirect(reverse('courses:course_create_chapter', kwargs={'course_id': form.instance.id}))
 

@@ -10,6 +10,15 @@ from comments.models import Comment
 from tags.models import Tag
 from membership.models import Membership
 from django.contrib.contenttypes.models import ContentType
+# from rating.models import Rate
+
+from moviepy.editor import VideoFileClip
+import datetime
+from time import strftime
+from time import gmtime
+from django.db.models import Sum
+
+import math
 
 SKILL_LEVEL = [
     ('all', 'All level'),
@@ -18,13 +27,7 @@ SKILL_LEVEL = [
     ('advanced', 'Advanced'),
 ]
 
-Rating_CHOICES = (
-    (1, 'Poor'),
-    (2, 'Average'),
-    (3, 'Good'),
-    (4, 'Very Good'),
-    (5, 'Excellent')
-)
+
 
 
 def preview_video_upload(instance, filename):
@@ -33,16 +36,23 @@ def preview_video_upload(instance, filename):
 def lesson_video_upload(instance, filename):
     return f'courses/lessons/{instance.title}/{instance.title}_{filename}'
 
+def category_image_upload(instance, filename):
+    return f'categories/{instance.name}/{instance.name}_{filename}'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(blank=True, null=True)
+    image = models.ImageField(upload_to=category_image_upload)
 
     class Meta:
         verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('courses:category', kwargs={'slug': self.slug})
 
 class Course(models.Model):
     title                       = models.CharField(max_length=100)
@@ -50,7 +60,7 @@ class Course(models.Model):
     author                      = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     price                       = models.DecimalField(decimal_places=2, max_digits=10)
     discount                    = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
-    duration                    = models.IntegerField(default=0, help_text="Type the number of minutes")
+    duration                    = models.IntegerField(default=0, help_text="Type the number of minutes", blank=True, null=True)
     full_lifetime_access        = models.BooleanField(default=True)
     assignments                 = models.BooleanField(default=True)
     Certificate_of_completion   = models.BooleanField(default=True)
@@ -63,12 +73,15 @@ class Course(models.Model):
     Skill_level                 = models.CharField(choices=SKILL_LEVEL, default='All Level', max_length=20)
     Language                    = models.CharField(max_length=100)
     best_seller                 = models.BooleanField(default=False)
-    rating                      = models.IntegerField(choices=Rating_CHOICES, default=1)
     tags                        = GenericRelation(Tag)
     comments                    = GenericRelation(Comment)
-    enrolled                    = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    enrolled                    = models.PositiveIntegerField(default=0)
     allowed_memberships         = models.ManyToManyField(Membership, default="Free")
     category                    = models.ManyToManyField(Category)
+    views                       = models.PositiveIntegerField(default=0)
+    total_points                = models.PositiveIntegerField(null=True, blank=True, default=1)
+    avg_points                  = models.PositiveIntegerField(null=True, blank=True, default=1)
+    total_rates                 = models.PositiveIntegerField(null=True, blank=True, default=1)
     timestamp                   = models.DateTimeField(auto_now_add=True)
     updated                     = models.DateTimeField(auto_now=True)
 
@@ -78,11 +91,47 @@ class Course(models.Model):
     def get_absolute_url(self):
         return reverse('courses:detail', kwargs={'slug': self.slug})
 
+    @property
     def get_rating(self):
-        return [i for i in range(self.rating)]
+        av = self.avg_points / self.total_points * 100
+        result = "{:.1f}".format(float(av / 20))
+        return float(result)
 
+    @property
+    def get_rates(self):
+        av = self.avg_points / self.total_points * 100
+        result = "{:.1f}".format(float(av / 20))
+        r = math.floor(float(result))
+        return [i for i in range(int(r))]
+    
+    @property
+    def get_remainder(self):
+        av = self.avg_points / self.total_points * 100
+        result = "{:.1f}".format(float(av / 20))
+        r = math.floor(float(result))
+        total = 0
+        for i in range(5):
+            if int(r) < 5:
+                total+=1
+                r+=1
+        return [i for i in range(int(total)) ]
+        
+
+    @property
     def get_duration(self):
-        return int(self.duration * 60)
+        return strftime("%H:%M:%S", gmtime(float(self.duration)))
+
+    @property
+    def get_duration_hours(self):
+        return strftime("%H", gmtime(float(self.duration)))
+
+    @property
+    def get_lessons_count(self):
+        total = 0
+        for chapter in self.chapter_set.all():
+            total += int(chapter.lesson_set.all().count())
+        return int(total)
+
 
     @property
     def get_price(self):
@@ -97,7 +146,6 @@ class Course(models.Model):
         return comments_qs.count()
 
 
-
 class Chapter(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(null=True, blank=True)
@@ -109,9 +157,9 @@ class Chapter(models.Model):
 class Lesson(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(null=True, blank=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, blank=True, null=True)
     position = models.IntegerField(default=1)
-    duration = models.CharField(max_length=10)
+    duration = models.CharField(max_length=10, blank=True, null=True)
     video       = models.FileField(upload_to=lesson_video_upload)
     thumbnail = models.ImageField(upload_to=lesson_video_upload)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -119,8 +167,20 @@ class Lesson(models.Model):
     def __str__(self):
         return f'{self.chapter.title} - {self.title}'
 
+    @property
+    def get_duration(self):
+        return strftime("%H:%M:%S", gmtime(float(self.duration)))
+
 
 class EnrolledCourse(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    courses = models.ManyToManyField(Course)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.instructor_set.first().username
+
+class WishList(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     courses = models.ManyToManyField(Course)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -159,6 +219,14 @@ post_save.connect(post_save_create_chapter, sender=Chapter)
 # Create Slug for Lesson
 def post_save_create_lesson(sender, instance, created, *args, **kwargs):
     if created:
+        clip = VideoFileClip(instance.video.path)
+        instance.duration = clip.duration
+
+        chapter = instance.chapter
+        course = chapter.course
+        course.duration += float(clip.duration)
+        course.save()
+
         if instance.slug is None and instance.title:
             instance.slug = slugify(instance.title)
         instance.save()

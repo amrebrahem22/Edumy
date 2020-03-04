@@ -90,11 +90,86 @@
 				<div class="selected_filter_widget style2">
 					<div class="siderbar_contact_widget">
 						<p>Total students</p>
-						<i>102,924</i>
+						<i>{{instructor.students}}</i>
 						<p>Courses</p>
-						<i>22</i>
+						<i>{{courses.count}}</i>
 						<p>Reviews</p>
 						<i>20,400</i>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 col-lg-8 col-xl-9">
+				<div class="row">
+					{% for course in courses %}
+					<div class="col-lg-6 col-xl-4">
+						<div class="top_courses">
+							<div class="thumb">
+								<a href="{{ course.get_absolute_url }}"><img class="img-whp"
+										src="{{ course.thumbnail.url }}" alt="t1.jpg"></a>
+								<div class="overlay">
+									{% if image.best_seller %}
+									<div class="tag">Best Seller</div>
+									{% endif %}
+									<div class="icon"><span class="flaticon-like"></span></div>
+									<a class="tc_preview_course" href="{{ course.get_absolute_url }}">Preview Course</a>
+								</div>
+							</div>
+							<div class="details">
+								<div class="tc_content">
+									<p>{{course.author}}</p>
+									<a href="{{ course.get_absolute_url }}">
+										<h5>{{course.title}}</h5>
+									</a>
+									<ul class="tc_review">
+										{% for _ in instructor.get_rates %}
+										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+										{% endfor %}
+										{% for _ in instructor.get_remainder %}
+										<li class="list-inline-item"><a href="#"><i class="fa fa-star"
+													style="color: #b8b6b6;"></i></a></li>
+										{% endfor %}
+										<li class="list-inline-item"><a href="#">({{instructor.total_rates}})</a></li>
+									</ul>
+								</div>
+								<div class="tc_footer">
+									<ul class="tc_meta float-left">
+										<li class="list-inline-item"><a href="#"><i class="flaticon-profile"></i></a>
+										</li>
+										<li class="list-inline-item"><a href="#">{{course.views}}</a></li>
+										<li class="list-inline-item"><a href="#"><i class="flaticon-comment"></i></a>
+										</li>
+										<li class="list-inline-item"><a href="#">{{course.comments_count}}</a></li>
+									</ul>
+									<div class="tc_price float-right">${{course.price}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+					<div class="col-lg-12">
+						{% if paginator %}
+						<div class="mbp_pagination">
+							<ul class="page_navigation">
+								{% if page_obj.has_previous %}
+								<li class="page-item">
+									<a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
+										aria-disabled="true"> <span class="flaticon-left-arrow"></span> Prev</a>
+								</li>
+								{% endif %}
+								<li class="page-item active" aria-current="page">
+									<a class="page-link" href="?page={{ page_obj.number }}"
+										style="color: #fff;">{{ page_obj.number }} <span
+											class="sr-only">(current)</span></a>
+								</li>
+								{% if page_obj.has_next %}
+								<li class="page-item">
+									<a class="page-link" href="?page={{ page_obj.next_page_number }}">Next <span
+											class="flaticon-right-arrow-1"></span></a>
+								</li>
+								{% endif %}
+							</ul>
+						</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>

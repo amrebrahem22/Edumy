@@ -23,102 +23,53 @@
             <!--Note: declare the Menu style in the data-menu-style="horizontal" (options: horizontal, vertical, accordion) -->
             <ul id="respMenu" class="ace-responsive-menu" data-menu-style="horizontal">
                 <li>
-                    <a href="#"><span class="title">Home</span></a>
-                    <!-- Level Two-->
+                    <a href="/"><span class="title">Home</span></a>
+                </li>
+                <li>
+                    <a href="{% url 'courses:index' %}"><span class="title">Courses</span></a>
+                    {% if request.user.is_authenticated %}
                     <ul>
-                        <li><a href="index-2.html">Home 1</a></li>
-                        <li><a href="index2.html">Home 2</a></li>
-                        <li><a href="index3.html">Home 3</a></li>
-                        <li><a href="index4.html">Home 4</a></li>
-                        <li><a href="index5.html">Home 5</a></li>
-                        <li><a href="index6.html">Home - University</a></li>
-                        <li><a href="index7.html">Home College</a></li>
-                        <li><a href="index8.html">Home Kindergarten</a></li>
+                        <li>
+                            <a href="{% url 'courses:my_courses' %}"><span class="title">My Courses</span></a>
+                            <a href="{% url 'courses:wishlist' %}"><span class="title">My Wish List</span></a>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </li>
+                <li>
+                    <a href="{% url 'instructors' %}"><span class="title">Instructors</span></a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'auth:become_instructor' %}"><span class="title">Become
+                                    Instructor</span></a>
+                        </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><span class="title">Courses</span></a>
-                    <!-- Level Two-->
-                    <ul>
-                        <li>
-                            <a href="#">Courses List</a>
-                            <!-- Level Three-->
-                            <ul>
-                                <li><a href="page-course-v1.html">Courses v1</a></li>
-                                <li><a href="page-course-v2.html">Courses v2</a></li>
-                                <li><a href="page-course-v3.html">Courses v3</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Courses Single</a>
-                            <!-- Level Three-->
-                            <ul>
-                                <li><a href="page-course-single-v1.html">Single V1</a></li>
-                                <li><a href="page-course-single-v2.html">Single V2</a></li>
-                                <li><a href="page-course-single-v3.html">Single V3</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="page-instructors.html">Instructors</a></li>
-                        <li><a href="page-instructors-single.html">Instructor Single</a></li>
-                    </ul>
+                    <a href="{% url 'events:list' %}"><span class="title">Events</span></a>
+                </li>
+
+                <li>
+                    <a href="{% url 'blog:list' %}"><span class="title">Blog</span></a>
                 </li>
                 <li>
-                    <a href="#"><span class="title">Events</span></a>
-                    <ul>
-                        <li><a href="page-event.html">Event List</a></li>
-                        <li><a href="page-event-single.html">Event Single</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><span class="title">Pages</span></a>
-                    <ul>
-                        <li>
-                            <a href="#"><span class="title">Shop Pages</span></a>
-                            <ul>
-                                <li><a href="page-shop.html">Shop</a></li>
-                                <li><a href="page-shop-single.html">Shop Single</a></li>
-                                <li><a href="page-shop-cart.html">Cart</a></li>
-                                <li><a href="page-shop-checkout.html">Checkout</a></li>
-                                <li><a href="page-shop-order.html">Order</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><span class="title">User Admin</span></a>
-                            <ul>
-                                <li><a href="page-dashboard.html">Dashboard</a></li>
-                                <li><a href="page-my-courses.html">My Courses</a></li>
-                                <li><a href="page-my-order.html">My Order</a></li>
-                                <li><a href="page-my-message.html">My Message</a></li>
-                                <li><a href="page-my-review.html">My Review</a></li>
-                                <li><a href="page-my-bookmarks.html">My Bookmarks</a></li>
-                                <li><a href="page-my-listing.html">My Listing</a></li>
-                                <li><a href="page-my-setting.html">My Setting</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="page-about.html">About Us</a></li>
-                        <li><a href="page-gallery.html">Gallery</a></li>
-                        <li><a href="page-faq.html">Faq</a></li>
-                        <li><a href="page-login.html">LogIn</a></li>
-                        <li><a href="page-register.html">Register</a></li>
-                        <li><a href="page-pricing.html">Membership</a></li>
-                        <li><a href="page-error.html">404 Page</a></li>
-                        <li><a href="page-terms.html">Terms and Conditions</a></li>
-                        <li><a href="page-become-instructor.html">Become an Instructor</a></li>
-                        <li><a href="page-ui-element.html">UI Elements</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><span class="title">Blog</span></a>
-                    <ul>
-                        <li><a href="page-blog-v1.html">Blog List 1</a></li>
-                        <li><a href="page-blog-grid.html">Blog List 2</a></li>
-                        <li><a href="page-blog-list.html">Blog List 3</a></li>
-                        <li><a href="page-blog-single.html">Single Post</a></li>
-                    </ul>
+                    <a href="{% url 'about' %}"><span class="title">About Us</span></a>
                 </li>
                 <li class="last">
-                    <a href="page-contact.html"><span class="title">Contact</span></a>
+                    <a href="{% url 'contact' %}"><span class="title">Contact</span></a>
                 </li>
+                {% if request.user.is_staff %}
+                <li>
+                    <a href=""><span class="title">Create</span></a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'courses:course_create' %}"><span class="title">Course</span></a>
+                        </li>
+                        <li><a href="{% url 'blog:create' %}">Post</a></li>
+                        <li><a href="{% url 'events:create' %}">Event</a></li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
             <ul class="sign_up_btn pull-right dn-smd mt20">
 
@@ -136,34 +87,22 @@
                                 <a href="{% url 'cart:order' %}"
                                     class="btn cart_btn flaticon-shopping-bag"><span>{{ request.user|cart_item_count }}</span></a>
                                 <ul class="dropdown_content">
+                                    {% for item in  request.user|cart_items %}
                                     <li class="list_content">
-                                        <a href="#">
-                                            <img class="float-left" src="http://via.placeholder.com/50x50" alt="50x50">
-                                            <p>Dolar Sit Amet</p>
-                                            <small>1 × $7.90</small>
-                                            <span class="close_icon float-right"><i class="fa fa-plus"></i></span>
+                                        <a href="{{item.item.get_absolte_url}}">
+                                            <img class="float-left" src="{{item.item.thumbnail.url}}"
+                                                alt="{{item.item.title}}" style="max-width: 80px; border-radius: 0;">
+                                            <p>{{item.item.title}}</p>
+                                            <a href="{% url 'cart:remove_from_cart' slug=item.item.slug %}"><span
+                                                    class="close_icon float-right"><i class="fa fa-plus"></i></span></a>
                                         </a>
                                     </li>
+                                    {% endfor %}
                                     <li class="list_content">
-                                        <a href="#">
-                                            <img class="float-left" src="http://via.placeholder.com/50x50" alt="50x50">
-                                            <p>Lorem Ipsum</p>
-                                            <small>1 × $7.90</small>
-                                            <span class="close_icon float-right"><i class="fa fa-plus"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="list_content">
-                                        <a href="#">
-                                            <img class="float-left" src="http://via.placeholder.com/50x50" alt="50x50">
-                                            <p>Is simply</p>
-                                            <small>1 × $7.90</small>
-                                            <span class="close_icon float-right"><i class="fa fa-plus"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="list_content">
-                                        <h5>Subtotal: $57.70</h5>
-                                        <a href="#" class="btn btn-thm cart_btns">View cart</a>
-                                        <a href="#" class="btn btn-thm3 checkout_btns">Checkout</a>
+                                        <h5>Subtotal: ${{ request.user|cart_total }}</h5>
+                                        <a href="{% url 'cart:order' %}" class="btn btn-thm cart_btns">View cart</a>
+                                        <a href="{% url 'cart:payment' %}"
+                                            class="btn btn-thm3 checkout_btns">Checkout</a>
                                     </li>
                                 </ul>
                             </li>
@@ -293,8 +232,9 @@
     <div class="mk-fullscreen-search-overlay" id="mk-search-overlay">
         <a href="#" class="mk-fullscreen-close" id="mk-fullscreen-close-button"><i class="fa fa-times"></i></a>
         <div id="mk-fullscreen-search-wrapper">
-            <form method="get" id="mk-fullscreen-searchform">
-                <input type="text" value="" placeholder="Search courses..." id="mk-fullscreen-search-input">
+            <form method="get" id="mk-fullscreen-searchform" action="{% url 'search' %}">
+                <input type="text" value="{{ request.GET.q }}" placeholder="Search courses..."
+                    id="mk-fullscreen-search-input" name="q">
                 <i class="flaticon-magnifying-glass fullscreen-search-icon"><input value="" type="submit"></i>
             </form>
         </div>

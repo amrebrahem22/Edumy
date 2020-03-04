@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Inner Page Breadcrumb -->
+<section class="inner_page_breadcrumb">
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-6 offset-xl-3 text-center">
+				<div class="breadcrumb_content">
+					<h4 class="breadcrumb_title">Blog</h4>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="/">Home</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Blog</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Main Blog Post Content -->
+<section class="blog_post_container">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-xl-9">
+				<div class="main_blog_post_content">
+					<div class="mbp_thumb_post">
+						<div class="thumb">
+							<img class="img-fluid" src="{{post.image.url}}" alt="{{post.title}}"
+								style="width: 100%; height: 100%; max-height: 500px;">
+							<div class="tag">{% for cat in post.category.all %} {{cat.name}} {% endfor %}</div>
+							<div class="post_date">
+								<h2>{{post.timestamp|date:'d'}}</h2> <span>{{post.timestamp|date:'M'}}</span>
+							</div>
+						</div>
+						<div class="details" style='overflow:hidden;'>
+							<h3>{{post.title}}</h3>
+							<ul class="post_meta">
+								<li><a href="#"><span class="flaticon-profile"></span></a></li>
+								<li><a href="#"><span>{{post.author}}</span></a></li>
+								<li><a href="#"><span class="flaticon-comment"></span></a></li>
+								<li><a href="#"><span>{{post.comments_count}} comments</span></a></li>
+							</ul>
+							<h4>Description</h4>
+							<p class="mb25">{{post.description}}</p>
+							<h4 class="mb0">Content</h4>
+							<p class="mb25" style='max-width: 100%;'>{{post.content|safe}}</p>
+						</div>
+						<ul class="blog_post_share">
+							<li>
+								<p>Share</p>
+							</li>
+							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+							<li><a href="#"><i class="fa fa-google"></i></a></li>
+							<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+							<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+							<li><a href="#"><i class="fa fa-google"></i></a></li>
+						</ul>
+					</div>
+					<div class="mbp_pagination_tab">
+						<div class="row">
+							{% if post.get_next_by_created_at %}
+							<div class="col-sm-6 col-lg-6">
+								<div class="pag_prev">
+									<a href="{% url 'blog:detail' slug=post.get_next_by_created_at.slug %}"><span
+											class="flaticon-left-arrow"></span>Previous Post</a> <br>
+									<p>{{post.get_next_by_created_at.title}}</p>
+								</div>
+							</div>
+							{% endif %}
+							{% if post.get_previous_by_created_at %}
+							<div class="col-sm-6 col-lg-6">
+								<div class="pag_next text-right">
+									<a href="{% url 'blog:detail' slug=post.get_previous_by_created_at.slug %}">Next
+										Post <span class="flaticon-right-arrow-1"></span></a> <br>
+									<p>{{post.get_previous_by_created_at.title}}</p>
+								</div>
+							</div>
+							{% endif %}
+						</div>
+						<ul>
+							<li class="list-inline-item float-left"></li>
+							<li class="list-inline-item float-right"></li>
+						</ul>
+					</div>
+					<div class="product_single_content style2 mb30">
+						<h4 class="aii_title">Reviews</h4>
+						<div class="mbp_pagination_comments">
+
+							{% for comment in comments %}
+							{% if comment.is_parent %}
+							<div class="mbp_first media csv1">
+								<img src="{{comment.user.instructor_set.first.avatar.url}}" class="mr-3"
+									alt="review1.png">
+								<div class="media-body">
+									<h4 class="sub_title mt-0">{{comment.user.instructor_set.first.username}}
+										<span class="sspd_review float-right">
+											<ul>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"></li>
+											</ul>
+										</span>
+									</h4>
+									<a class="sspd_postdate fz14" href="#">{{comment.timestamp|timesince}}</a>
+									<p class="fz15 mt20">{{comment.body}}</p>
+									<div class="ssp_reply float-right"><span
+											class="flaticon-consulting-message"></span><span class="pl10">Reply</span>
+									</div>
+
+									{% for reply in comment.children %}
+									<div class="sspd_review_liked">
+										<a href="#"><i class="flaticon-like-1"></i>
+											<span class="text-thm6 pl5 pr5 fz15">15</span>
+											{{reply.body}}
+										</a>
+									</div>
+									{% endfor %}
+									{% if request.user.is_authenticated %}
+									<form class="comments_form" method='POST' action='.'>
+										{% csrf_token %}
+										<input type="hidden" name="object_id" value="{{ comment.id }}">
+										<div class="form-group">
+											<label for="exampleFormControlTextarea1">Reply Content</label>
+											<textarea class="form-control" name='body' id="exampleFormControlTextarea1"
+												rows="6"></textarea>
+										</div>
+										<button type="submit" class="btn btn-thm">Reply <span
+												class="flaticon-right-arrow-1"></span></button>
+									</form>
+									{% else %}
+									<li class="list-inline-item pr15">
+										<p>Sign in to Comment <a href="{% url 'auth:login' %}">Login</a> or <a
+												href="{% url 'auth:signup' %}">Register</a></p>
+									</li>
+									{% endif %}
+								</div>
+							</div>
+							<!-- <div class="custom_hr"></div> -->
+							{% endif %}
+							{% endfor %}
+							<div class="text-center mt50">
+								<div class="custom_hr"></div>
+								<button type="button" class="more-review-btn btn">See more reviews</button>
+							</div>
+						</div>
+					</div>
+					<div class="product_single_content style2">
+						<div class="mbp_comment_form style2">
+							<h4>Add Reviews & Rate</h4>
+							{% if request.user.is_authenticated %}
+							<ul>
+								<li class="list-inline-item pr15">
+									<p>What is it like to Course?</p>
+								</li>
+								<li class="list-inline-item">
+									<span class="sspd_review">
+										<ul>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"></li>
+										</ul>
+									</span>
+								</li>
+							</ul>
+							<form class="comments_form" method='POST' action='.'>
+								{% csrf_token %}
+								<div class="form-group">
+									<label for="exampleFormControlTextarea1">Review Content</label>
+									<textarea class="form-control" name='body' id="exampleFormControlTextarea1"
+										rows="6"></textarea>
+								</div>
+								<button type="submit" class="btn btn-thm">Submit Review <span
+										class="flaticon-right-arrow-1"></span></button>
+							</form>
+							{% else %}
+							<li class="list-inline-item pr15">
+								<p>Sign in to Comment <a href="{% url 'auth:login' %}">Login</a> or <a
+										href="{% url 'auth:signup' %}">Register</a></p>
+							</li>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-xl-3 pl10 pr10">
+				<div class="main_blog_post_widget_list">
+					<div class="blog_search_widget">
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" placeholder="Search Here"
+								aria-label="Recipient's username" aria-describedby="button-addon2">
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary" type="button" id="button-addon2"><span
+										class="flaticon-magnifying-glass"></span></button>
+							</div>
+						</div>
+					</div>
+					<div class="blog_category_widget">
+						<ul class="list-group">
+							<h4 class="title">Category</h4>
+							{% for category in top_categories %}
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								{{category.name|title}} <span class="float-right">{{category.post_set.count}}</span>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="blog_recent_post_widget media_widget">
+						<h4 class="title">Recent Posts</h4>
+						{% for post in latest %}
+						<div class="media">
+							<a href="{{post.get_absolute_url}}"><img class="align-self-start mr-3"
+									src="{{post.image.url}}" alt="{{post.title}}">
+								<div class="media-body">
+									<h5 class="mt-0 post_title">{{post.title}}</h5>
+									<a href="#">{{post.timestamp|timesince}}.</a>
+								</div>
+							</a>
+						</div>
+						{% endfor %}
+					</div>
+					<div class="blog_tag_widget">
+						<h4 class="title">Tags</h4>
+						<ul class="tag_list">
+							{% for tag in tags %}
+							<li class="list-inline-item"><a href="#">{{tag.name}}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

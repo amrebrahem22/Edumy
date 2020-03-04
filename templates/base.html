@@ -12,6 +12,7 @@
 	<meta name="CreativeLayers" content="ATFN">
 	<!-- css file -->
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	<!-- Responsive stylesheet -->
 	<link rel="stylesheet" href="{% static 'css/responsive.css' %}">
@@ -28,6 +29,10 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	{% block extra_head %} {% endblock %}
+	<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/agate.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 <body>
@@ -53,6 +58,31 @@
 		{% include 'snippets/footer.html' %}
 	</div>
 	{% include 'snippets/scripts.html' %}
+	<script>
+		$('.wishlist_btn').on('click', function (e) {
+			e.preventDefault();
+			var _this = $(this);
+			$.ajax({
+				url: $(this).data('url'),
+				method: "GET",
+				success: function (data) {
+					console.log(data)
+
+					if (data.created) {
+						console.log('added')
+						_this.find('span').addClass('color-red');
+
+					} else if (data.removed) {
+						console.log('removed')
+						_this.find('span').removeClass('color-red');
+					}
+				},
+				error: function (error) {
+					console.log(error)
+				}
+			});
+		});
+	</script>
 	{% block extraScript %} {% endblock %}
 </body>
 

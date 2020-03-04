@@ -3424,6 +3424,7 @@ header.header-nav.menu_style_home_seven .ace-responsive-menu > li.last{
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  height: 350px;
 }
 
 .top_courses.home2 {
@@ -5322,6 +5323,7 @@ header.header-nav.menu_style_home_seven .ace-responsive-menu > li.last{
   left: 30px;
   position: absolute;
   z-index: 9;
+  width: 100%;
 }
 .blog_post .details h4{
   font-size: 18px;
@@ -8846,7 +8848,7 @@ ul.mc_parent_list ul.mc_child_list:hover .pricing_btn{
 .testimonial_slider_home3 .testimonial_content:before {
   top: -50px;
   overflow: hidden;
-  content: 'Ã¢â‚¬Å“';
+  content: 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“';
   color: #0a0a0a;
   font-weight: 700;
   font-size: 170px;
@@ -8969,6 +8971,8 @@ ul.mc_parent_list ul.mc_child_list:hover .pricing_btn{
 /*== Color Area ==*/
 .img-whp {
   width: 100% !important;
+  max-height: 160px;
+  height: 100%;
 }
 .text-thm {
   color: #2441e7 !important;
@@ -9671,6 +9675,7 @@ ul.mc_parent_list ul.mc_child_list:hover .pricing_btn{
 }
 .w100 {
   width: 100% !important;
+  height: 366px;
 }
 .fw300 {
   font-weight: 300 !important;
@@ -12004,4 +12009,10 @@ textarea.form-control{
 .gallery_item .gallery_overlay .icon span{
   color: #ffffff;
   font-size: 50px;
+}
+.custom-form textarea {
+  height: 150px !important;
+}
+.custom-form input[type='file'] {
+  padding: 10px !important;
 }

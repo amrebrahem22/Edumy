@@ -5,7 +5,7 @@ from .models import Course, Chapter, Lesson
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['title', 'price', 'discount', 'duration', 'full_lifetime_access', 'assignments', 'Certificate_of_completion', 'preview', 'thumbnail', 'overview', 'description', 'what_will_learn', 'requirements', 'Skill_level', 'Language', 'category',]
+        fields = ['title', 'price', 'discount', 'allowed_memberships', 'full_lifetime_access', 'assignments', 'Certificate_of_completion', 'preview', 'thumbnail', 'overview', 'description', 'what_will_learn', 'requirements', 'Skill_level', 'Language', 'category',]
         # widgets = {
         #     'title': forms.TextInput(attrs={"class" : "form-control", "id":"exampleInputEmail3",
         #                                 "placeholder":"Title"}),
@@ -59,7 +59,7 @@ class LessonForm(forms.ModelForm):
     
     class Meta:
         model = Lesson
-        exclude = ['slug', 'timestamp', 'chapter']
+        exclude = ['slug', 'timestamp', 'chapter', 'duration']
     
     def __init__(self, *args, **kwargs):
         self._course = kwargs.pop('course')
@@ -70,11 +70,11 @@ class LessonForm(forms.ModelForm):
             if field == 'thumbnail' or field == 'video':
                 self.fields[field].widget.attrs['style'] = 'padding: 10px'
 
-    def save(self, commit=True):
-        inst = super(LessonForm, self).save(commit=False)
+    # def save(self, commit=True):
+    #     inst = super(LessonForm, self).save(commit=False)
         
-        if commit:
-            inst.save()
-            self.save_m2m()
-        return inst
+    #     if commit:
+    #         inst.save()
+    #         self.save_m2m()
+    #     return inst
     

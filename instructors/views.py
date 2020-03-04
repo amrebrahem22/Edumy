@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from .models import Instructor
+from courses.models import Course, Category
 
 User = get_user_model()
 
@@ -13,11 +14,29 @@ class InstructorListView(ListView):
     context_object_name = 'instructors'
     paginate_by = 12
 
+    def get_context_data(self, **kwargs):
+        context = super(InstructorListView, self).get_context_data(**kwargs)
+        context['cats'] = Category.objects.all()[:4]
+        context['instructors_list'] = Instructor.objects.all()[:8]
+        context['beginner'] = Course.objects.filter(Skill_level='beginner')
+        context['intermediate'] = Course.objects.filter(Skill_level='intermediate')
+        context['advanced'] = Course.objects.filter(Skill_level='advanced')
+        context['all'] = Course.objects.filter(Skill_level='all')
+        return context
+
 
 class InstructorDetailView(DetailView):
     queryset = Instructor.objects.all()
     template_name =  'instructors/instructors_single.html'
     context_object_name = 'instructor'
+    paginate_by = 12
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(InstructorDetailView, self).get_context_data(**kwargs)
+        context['courses'] = self.get_object().course_set.all()
+        return context
+    
 
 
 def become_instructor(request):

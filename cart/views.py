@@ -108,9 +108,17 @@ class PaymentView(View):
         payment.amount = order.get_total
         payment.save()
 
-        enrolled = EnrolledCourse()
-        enrolled.user = self.request.user
-        enrolled.save()
+        author_students = self.request.user.instructor_set.first()
+        author_students.students += 1
+        author_students.save()
+
+        enrolled_qs = EnrolledCourse.objects.get(user=self.request.user)
+        if enrolled_qs:
+            enrolled = enrolled_qs
+        else:
+            enrolled = EnrolledCourse()
+            enrolled.user = self.request.user
+            enrolled.save()
         for course in order.items.all():
             enrolled.courses.add(course.item)
             enrolled.save()
@@ -119,6 +127,11 @@ class PaymentView(View):
         order.ordered = True
         order.payment = payment
         order.save()
+
+        for order_item in order.items.all():
+            course = Course.objects.get(id=order_item.item.id)
+            course.enrolled += 1
+            course.save()
 
         messages.success(self.request, "Your order was successful!")
         return redirect("/")

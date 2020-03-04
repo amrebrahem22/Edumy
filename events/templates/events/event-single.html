@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Inner Page Breadcrumb -->
+<section class="inner_page_breadcrumb">
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-6 offset-xl-3 text-center">
+				<div class="breadcrumb_content">
+					<h4 class="breadcrumb_title">{{event.title}}</h4>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="/">Home</a></li>
+						<li class="breadcrumb-item active" aria-current="page">{{event.title}}</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Main Blog Post Content -->
+<section class="blog_post_container">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-xl-9">
+				<div class="main_blog_post_content">
+					<div class="mbp_thumb_post">
+						<div class="details pt0">
+							<h3 class="mb25">{{event.title}}</h3>
+						</div>
+						<div class="thumb">
+							<img class="img-fluid" src="{{event.image.url}}" alt="12.jpg" style="width: 100%; height: 100%; max-height: 500px;">
+							<div class="post_date">
+								<h2>{{event.timestamp|date:'d'}}</h2> <span>{{event.timestamp|date:'M'}}</span>
+							</div>
+						</div>
+						<div class="event_counter_plugin_container">
+							<div class="event_counter_plugin_content" id="timer"
+								data-timer="{{ event.date|date:'M d, Y' }} 00:00:00">
+								<ul>
+									<li>days<span id="days"></span></li>
+									<li>Hours<span id="hours"></span></li>
+									<li>Minutes<span id="minutes"></span></li>
+									<li>Seconds<span id="seconds"></span></li>
+								</ul>
+							</div>
+						</div>
+						<div class="details">
+							<h4>Event Description</h4>
+							<p>{{event.description}} </p>
+							<h4 class="mb0">Event Content</h4>
+							<p>{{event.content|safe}}</p>
+						</div>
+						<ul class="blog_post_share mb0">
+							<li>
+								<p>Share</p>
+							</li>
+							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+							<li><a href="#"><i class="fa fa-google"></i></a></li>
+							<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+							<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+							<li><a href="#"><i class="fa fa-google"></i></a></li>
+						</ul>
+					</div>
+					<div class="mbp_pagination_tab">
+						<div class="row">
+							<div class="col-lg-12">
+								<h4 class="event_participator_tile">Event Participants</h4>
+							</div>
+							{% for instructor in event.participants.all %}
+							<div class="col-sm-6 col-lg-6 col-xl-3">
+								<div class="participator_team text-center">
+									<div class="thumb">
+										<img class="img-fluid" src="{{instructor.avatar.url}}"
+											alt="{{instructor.username}}">
+									</div>
+									<div class="details">
+										<h4>{{instructor.username}}</h4>
+										<p>{{instructor.title}}</p>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+						</div>
+						<ul>
+							<li class="list-inline-item float-left"></li>
+							<li class="list-inline-item float-right"></li>
+						</ul>
+					</div>
+					<div class="product_single_content style2 mb30">
+						<h4 class="aii_title">Reviews</h4>
+						<div class="mbp_pagination_comments">
+
+							{% for comment in comments %}
+							{% if comment.is_parent %}
+							<div class="mbp_first media csv1">
+								<img src="{{comment.user.instructor_set.first.avatar.url}}" class="mr-3"
+									alt="review1.png">
+								<div class="media-body">
+									<h4 class="sub_title mt-0">{{comment.user.instructor_set.first.username}}
+										<span class="sspd_review float-right">
+											<ul>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a>
+												</li>
+												<li class="list-inline-item"></li>
+											</ul>
+										</span>
+									</h4>
+									<a class="sspd_postdate fz14" href="#">{{comment.timestamp|timesince}}</a>
+									<p class="fz15 mt20">{{comment.body}}</p>
+									<div class="ssp_reply float-right"><span
+											class="flaticon-consulting-message"></span><span class="pl10">Reply</span>
+									</div>
+
+									{% for reply in comment.children %}
+									<div class="sspd_review_liked">
+										<a href="#"><i class="flaticon-like-1"></i>
+											<span class="text-thm6 pl5 pr5 fz15">15</span>
+											{{reply.body}}
+										</a>
+									</div>
+									{% endfor %}
+									{% if request.user.is_authenticated %}
+									<form class="comments_form" method='POST' action='.'>
+										{% csrf_token %}
+										<input type="hidden" name="object_id" value="{{ comment.id }}">
+										<div class="form-group">
+											<label for="exampleFormControlTextarea1">Reply Content</label>
+											<textarea class="form-control" name='body' id="exampleFormControlTextarea1"
+												rows="6"></textarea>
+										</div>
+										<button type="submit" class="btn btn-thm">Reply <span
+												class="flaticon-right-arrow-1"></span></button>
+									</form>
+									{% else %}
+									<li class="list-inline-item pr15">
+										<p>Sign in to Comment <a href="{% url 'auth:login' %}">Login</a> or <a
+												href="{% url 'auth:signup' %}">Register</a></p>
+									</li>
+									{% endif %}
+								</div>
+							</div>
+							<!-- <div class="custom_hr"></div> -->
+							{% endif %}
+							{% endfor %}
+							<div class="text-center mt50">
+								<div class="custom_hr"></div>
+								<button type="button" class="more-review-btn btn">See more reviews</button>
+							</div>
+						</div>
+					</div>
+					<div class="product_single_content style2">
+						<div class="mbp_comment_form style2">
+							<h4>Add Reviews & Rate</h4>
+							{% if request.user.is_authenticated %}
+							<ul>
+								<li class="list-inline-item pr15">
+									<p>What is it like to Course?</p>
+								</li>
+								<li class="list-inline-item">
+									<span class="sspd_review">
+										<ul>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"><a href="#"><i class="fa fa-star fz18"></i></a>
+											</li>
+											<li class="list-inline-item"></li>
+										</ul>
+									</span>
+								</li>
+							</ul>
+							<form class="comments_form" method='POST' action='.'>
+								{% csrf_token %}
+								<div class="form-group">
+									<label for="exampleFormControlTextarea1">Review Content</label>
+									<textarea class="form-control" name='body' id="exampleFormControlTextarea1"
+										rows="6"></textarea>
+								</div>
+								<button type="submit" class="btn btn-thm">Submit Review <span
+										class="flaticon-right-arrow-1"></span></button>
+							</form>
+							{% else %}
+							<li class="list-inline-item pr15">
+								<p>Sign in to Comment <a href="{% url 'auth:login' %}">Login</a> or <a
+										href="{% url 'auth:signup' %}">Register</a></p>
+							</li>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-xl-3 pl10 pr10">
+				<div class="main_blog_post_widget_list">
+					<div class="event_details_widget">
+						<h4 class="title">Event Details</h4>
+						<ul>
+							<li><span class="flaticon-appointment"></span> Date: {{event.date}}</li>
+							<li><span class="flaticon-clock"></span> Time: {{event.start_in|date:'P'}} -
+								{{event.end_at|date:'P'}}</li>
+							<li><span class="flaticon-placeholder"></span> Address: {{event.address}}</li>
+						</ul>
+					</div>
+					<div class="event_details_widget">
+						<h4 class="title">Event Details</h4>
+						<ul>
+							<li><span class="flaticon-phone-call"></span> {{event.phone}}</li>
+							<li><span class="flaticon-email"></span> <a
+									href="mailto:{{event.email}}">{{event.email}}</a></li>
+							<li><span class="flaticon-www"></span> <a href="{{event.site}}">{{event.site}}</a></li>
+						</ul>
+					</div>
+					<div class="blog_tag_widget">
+						<h4 class="title">Tags</h4>
+						<ul class="tag_list">
+							<li class="list-inline-item"><a href="#">Photoshop</a></li>
+							<li class="list-inline-item"><a href="#">Sketch</a></li>
+							<li class="list-inline-item"><a href="#">Beginner</a></li>
+							<li class="list-inline-item"><a href="#">UX/UI</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% block extraScript %}
+<script>
+	$(document).ready(function () {
+		const second = 1000,
+			minute = second * 60,
+			hour = minute * 60,
+			day = hour * 24,
+			timer = $('#timer').data('timer');
+		// 'Dec 30, 2021 00:00:00'
+		var countDown = new Date(timer).getTime(),
+			x = setInterval(function () {
+				let now = new Date().getTime(),
+					distance = countDown - now;
+					document.getElementById('days').innerText = Math.floor(distance / (day)),
+					document.getElementById('hours').innerText = Math.floor((distance % (day)) / (hour)),
+					document.getElementById('minutes').innerText = Math.floor((distance % (hour)) / (minute)),
+					document.getElementById('seconds').innerText = Math.floor((distance % (minute)) / second);
+
+					if(countDown <= now) {
+						document.getElementById('days').innerText = '-',
+						document.getElementById('hours').innerText = '-',
+						document.getElementById('minutes').innerText = '-',
+						document.getElementById('seconds').innerText = '-';
+					}
+			}, second);
+	});
+</script>
+{% endblock %}
+{% endblock %}

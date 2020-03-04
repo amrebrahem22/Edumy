@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 
@@ -33,141 +33,41 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="team_slider">
+					{% for instructor in instructors_list %}
 					<div class="item">
 						<div class="team_member style2 text-center">
 							<div class="instructor_col">
 								<div class="thumb">
-									<img class="img-fluid img-rounded-circle" src="images/team/6.png" alt="6.png">
+									<a href="{{instructor.get_absolute_url}}"><img class="img-fluid img-rounded-circle"
+											src="{{instructor.avatar.url}}" alt="{{instrucror.username}}"></a>
 								</div>
 								<div class="details">
-									<h4>Andrew Williams</h4>
-									<p>Web Design, Photoshop</p>
-									<ul>
+									<a href="{{instructor.get_absolute_url}}">
+										<h4>{{instructor.username}}</h4>
+									</a>
+									<p>{{instructor.title}}</p>
+									<ul class="tc_review">
+										{% for _ in instructor.get_rates %}
 										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#">(6)</a></li>
+										{% endfor %}
+										{% for _ in instructor.get_remainder %}
+										<li class="list-inline-item"><a href="#"><i class="fa fa-star"
+													style="color: #b8b6b6;"></i></a></li>
+										{% endfor %}
+										<li class="list-inline-item"><a href="#">({{instructor.total_rates}})</a></li>
 									</ul>
 								</div>
 							</div>
 							<div class="tm_footer">
 								<ul>
-									<li class="list-inline-item"><a href="#">56,178 students</a></li>
-									<li class="list-inline-item"><a href="#">22 courses</a></li>
+									<li class="list-inline-item"><a href="#">{{instructor.students}} students</a></li>
+									<li class="list-inline-item"><a href="#">{{instructor.course_set.all.count}}
+											courses</a></li>
 								</ul>
 							</div>
 						</div>
 					</div>
-					<div class="item">
-						<div class="team_member style2 text-center">
-							<div class="instructor_col">
-								<div class="thumb">
-									<img class="img-fluid img-rounded-circle" src="images/team/7.png" alt="7.png">
-								</div>
-								<div class="details">
-									<h4>Anna Richard</h4>
-									<p>CSS, HTML</p>
-									<ul>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#">(6)</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="tm_footer">
-								<ul>
-									<li class="list-inline-item"><a href="#">56,178 students</a></li>
-									<li class="list-inline-item"><a href="#">22 courses</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="team_member style2 text-center">
-							<div class="instructor_col">
-								<div class="thumb">
-									<img class="img-fluid img-rounded-circle" src="images/team/8.png" alt="8.png">
-								</div>
-								<div class="details">
-									<h4>Krisztina Szer</h4>
-									<p>User Experience Design</p>
-									<ul>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#">(6)</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="tm_footer">
-								<ul>
-									<li class="list-inline-item"><a href="#">56,178 students</a></li>
-									<li class="list-inline-item"><a href="#">22 courses</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="team_member style2 text-center">
-							<div class="instructor_col">
-								<div class="thumb">
-									<img class="img-fluid img-rounded-circle" src="images/team/9.png" alt="9.png">
-								</div>
-								<div class="details">
-									<h4>Kristen Pala</h4>
-									<p>Web Design, PSD to HTML</p>
-									<ul>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#">(6)</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="tm_footer">
-								<ul>
-									<li class="list-inline-item"><a href="#">56,178 students</a></li>
-									<li class="list-inline-item"><a href="#">22 courses</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="team_member style2 text-center">
-							<div class="instructor_col">
-								<div class="thumb">
-									<img class="img-fluid img-rounded-circle" src="images/team/10.png" alt="10.png">
-								</div>
-								<div class="details">
-									<h4>Jill Poye</h4>
-									<p>Watercolor Painting</p>
-									<ul>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#">(6)</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="tm_footer">
-								<ul>
-									<li class="list-inline-item"><a href="#">56,178 students</a></li>
-									<li class="list-inline-item"><a href="#">22 courses</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
+					{% endfor %}
 				</div>
 			</div>
 		</div>
@@ -182,7 +82,7 @@
 				<div class="row">
 					<div class="col-sm-5 col-lg-5 col-xl-6">
 						<div class="instructor_search_result">
-							<p class="mt10 fz15"><span class="color-dark">85</span> Instructors</p>
+							<p class="mt10 fz15"><span class="color-dark">{{instructors.count}}</span> Instructors</p>
 						</div>
 					</div>
 					<div class="col-sm-7 col-lg-7 col-xl-6">
@@ -210,20 +110,23 @@
 										<h4>{{instructor.username}}</h4>
 									</a>
 									<p>{{instructor.title}}</p>
-									<ul>
+									<ul class="tc_review">
+										{% for _ in instructor.get_rates %}
 										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
-										<li class="list-inline-item"><a href="#">(6)</a></li>
+										{% endfor %}
+										{% for _ in instructor.get_remainder %}
+										<li class="list-inline-item"><a href="#"><i class="fa fa-star"
+													style="color: #b8b6b6;"></i></a></li>
+										{% endfor %}
+										<li class="list-inline-item"><a href="#">({{instructor.total_rates}})</a></li>
 									</ul>
 								</div>
 							</div>
 							<div class="tm_footer">
 								<ul>
-									<li class="list-inline-item"><a href="#">56,178 students</a></li>
-									<li class="list-inline-item"><a href="#">22 courses</a></li>
+									<li class="list-inline-item"><a href="#">{{instructor.students}} students</a></li>
+									<li class="list-inline-item"><a href="#">{{instructor.course_set.all.count}}
+											courses</a></li>
 								</ul>
 							</div>
 						</div>
@@ -269,64 +172,12 @@
 							<div id="panelBodyfilter" class="panel-collapse collapse show">
 								<div class="panel-body">
 									<div class="tags-bar style2">
-										<span>Photoshop<i class="close-tag">x</i></span>
-										<span>Sketch<i class="close-tag">x</i></span>
-										<span>Beginner<i class="close-tag">x</i></span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="selected_filter_widget style2 mb30">
-					<div id="accordion" class="panel-group">
-						<div class="panel">
-							<div class="panel-heading">
-								<h4 class="panel-title">
-									<a href="#panelBodySoftware" class="accordion-toggle link fz20 mb15"
-										data-toggle="collapse" data-parent="#accordion">Software</a>
-								</h4>
-							</div>
-							<div id="panelBodySoftware" class="panel-collapse collapse show">
-								<div class="panel-body">
-									<div class="ui_kit_checkbox">
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck14">
-											<label class="custom-control-label" for="customCheck14">Photoshop <span
-													class="float-right">(03)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck15">
-											<label class="custom-control-label" for="customCheck15">Adobe Illustrator
-												<span class="float-right">(15)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck16">
-											<label class="custom-control-label" for="customCheck16">Graphic Design <span
-													class="float-right">(126)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck17">
-											<label class="custom-control-label" for="customCheck17">Sketch <span
-													class="float-right">(1,584)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck18">
-											<label class="custom-control-label" for="customCheck18">InDesign <span
-													class="float-right">(34)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck19">
-											<label class="custom-control-label" for="customCheck19">CorelDRAW <span
-													class="float-right">(34)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck20">
-											<label class="custom-control-label" for="customCheck20">After Effects <span
-													class="float-right">(06)</span></label>
-										</div>
-										<a class="color-orose" href="#"><span class="fa fa-plus pr10"></span> See
-											More</a>
+										{% for cat in cats %}
+										<a href="{{cat.get_absolute_url}}" style="display: inline-block;
+										padding: 6px 21px;
+										background: #e7e4e4;
+										border-radius: 15px;"><span>{{cat.name}}</span></a>
+										{% endfor %}
 									</div>
 								</div>
 							</div>
@@ -338,42 +189,27 @@
 						<div class="panel">
 							<div class="panel-heading">
 								<h4 class="panel-title">
-									<a href="#panelBodyRating" class="accordion-toggle link fz20 mb15"
-										data-toggle="collapse" data-parent="#accordion">Rating</a>
+									<a href="#panelBodyAuthors" class="accordion-toggle link fz20 mb15"
+										data-toggle="collapse" data-parent="#accordion">Author</a>
 								</h4>
 							</div>
-							<div id="panelBodyRating" class="panel-collapse collapse show">
+							<div id="panelBodyAuthors" class="panel-collapse collapse show">
 								<div class="panel-body">
-									<div class="ui_kit_checkbox style2">
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck80">
-											<label class="custom-control-label" for="customCheck80">Show All <span
-													class="float-right">(03)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck82">
-											<label class="custom-control-label" for="customCheck82">1 star and higher
-												<span class="float-right">(15)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck83">
-											<label class="custom-control-label" for="customCheck83">2 star and higher
-												<span class="float-right">(126)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck84">
-											<label class="custom-control-label" for="customCheck84">3 star and higher
-												<span class="float-right">(1,584)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck85">
-											<label class="custom-control-label" for="customCheck85">4 star and higher
-												<span class="float-right">(34)</span></label>
-										</div>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="customCheck86">
-											<label class="custom-control-label" for="customCheck86">5 star and higher
-												<span class="float-right">(58)</span></label>
+									<div class="cl_skill_checkbox">
+										<div class="content ui_kit_checkbox style2 text-left">
+											{% for instructor in instructors %}
+											<div class="custom-control custom-checkbox custom-checkbox-filter">
+												<input type="checkbox" class="custom-control-input"
+													id="customCheck{{instructor.id}}"
+													onchange="filterInstructor('/search', '{{instructor.username}}');"
+													{% if request.GET.search_instructor == instructor.username %}
+													checked {% endif %}>
+												<label class="custom-control-label" for="customCheck{{instructor.id}}"
+													style="cursor: pointer;">{{instructor.username}}
+													<span
+														class="float-right">({{instructor.course_set.count}})</span></label>
+											</div>
+											{% endfor %}
 										</div>
 									</div>
 								</div>
@@ -381,9 +217,114 @@
 						</div>
 					</div>
 				</div>
+				<div class="selected_filter_widget style2 mb30">
+					<div id="accordion" class="panel-group">
+						<div class="panel">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a href="#panelBodyPrice" class="accordion-toggle link fz20 mb15"
+										data-toggle="collapse" data-parent="#accordion">Price</a>
+								</h4>
+							</div>
+							<div id="panelBodyPrice" class="panel-collapse collapse show">
+								<div class="panel-body">
+									<div class="ui_kit_whitchbox">
+										<div class="custom-control custom-switch">
+											<input type="checkbox" class="custom-control-input" id="customSwitch1"
+												onchange="filterPrice('/search', 'Paid');"
+												{% if request.GET.price == "Paid" %} checked {% endif %}>>
+											<label class="custom-control-label" for="customSwitch1"
+												style="cursor: pointer;">Paid </label>
+										</div>
+										<div class="custom-control custom-switch">
+											<input type="checkbox" class="custom-control-input" id="customSwitch2"
+												onchange="filterPrice('/search', 'Free');"
+												{% if request.GET.price == "Free" %} checked {% endif %}>>
+											<label class="custom-control-label" for="customSwitch2"
+												style="cursor: pointer;">Free</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selected_filter_widget style2 mb30">
+					<div id="accordion" class="panel-group">
+						<div class="panel">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a href="#panelBodySkills" class="accordion-toggle link fz20 mb15"
+										data-toggle="collapse" data-parent="#accordion">Skill level</a>
+								</h4>
+							</div>
+							<div id="panelBodySkills" class="panel-collapse collapse show">
+								<div class="panel-body">
+									<div class="ui_kit_checkbox">
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="customCheck99"
+												onchange="filterSkill('/search', 'beginner');"
+												{% if request.GET.skill_level == "Beginner" %} checked {% endif %}>
+											<label class="custom-control-label" for="customCheck99"
+												style="cursor: pointer;">Beginner <span
+													class="float-right">({{beginner.count}})</span></label>
+										</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="customCheck98"
+												onchange="filterSkill('/search', 'intermediate');"
+												{% if request.GET.skill_level == "Intermediate" %} checked {% endif %}>
+											<label class="custom-control-label" for="customCheck98"
+												style="cursor: pointer;">Intermediate <span
+													class="float-right">({{intermediate.count}})</span></label>
+										</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="customCheck97"
+												onchange="filterSkill('/search', 'advanced');"
+												{% if request.GET.skill_level == "Advanced" %} checked {% endif %}>
+											<label class="custom-control-label" for="customCheck97"
+												style="cursor: pointer;">Advanced <span
+													class="float-right">({{advanced.count}})</span></label>
+										</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="customCheck96"
+												onchange="filterSkill('/search', 'all');"
+												{% if request.GET.skill_level == "All Level" %} checked {% endif %}>
+											<label class="custom-control-label" for="customCheck96"
+												style="cursor: pointer;">All Levels
+												<span class="float-right">({{all.count}})</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="selected_filter_widget style2">
+					<span class="float-left"><img class="mr20" src="{% static 'images/resource/2.png' %}"
+							alt="2.png"></span>
+					<h4 class="mt15 fz20 fw500">Not sure?</h4>
+					<br>
+					<p>Every course comes with a 30-day money-back guarantee</p>
+				</div>
 			</div>
 		</div>
 	</div>
 </section>
+{% block extraScript %}
+<script>
+	function filterInstructor(url, username) {
+		window.location.href = url + '/?search_instructor=' + username;
+	}
+
+	function filterPrice(url, price) {
+		window.location.href = url + '/?price=' + price;
+	}
+
+	function filterSkill(url, skill) {
+		window.location.href = url + '/?skill_level=' + skill;
+	}
+</script>
+
+{% endblock %}
 
 {% endblock content %}
